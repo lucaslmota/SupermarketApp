@@ -45,6 +45,7 @@ namespace api_rest
 
              services.AddScoped<ICategoryRespository,CategoryRepository>();
              services.AddScoped<ICategoryService,CategoryService>();
+             services.AddScoped<IUnityOfWork,UnitOfWork>();
              services.AddAutoMapper(typeof(Startup));
             
              

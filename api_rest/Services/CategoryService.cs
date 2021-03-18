@@ -38,5 +38,30 @@ namespace api_rest.Services
                 return new SaveCategoryResponse($"Um erro ocorreu quando salvado a categoria: {ex.Message}");
             }
         }
+    
+        public async Task<SaveCategoryResponse> UpdateAsync(int id, Category category)
+        {
+            var existingCategory = await _categoryRepository.FindByIdAsync(id);
+
+            if(existingCategory == null)
+            {
+                return new SaveCategoryResponse("Categoria não encontrada");
+            }
+
+            existingCategory.Name = category.Name;
+
+            try
+            {
+                _categoryRepository.Update(existingCategory);
+                await _unityOfWork.CompleteAsync();
+
+                return new SaveCategoryResponse(existingCategory);
+            }
+
+            catch (Exception ex)
+            {
+                return new SaveCategoryResponse($"Um erro aconteceu ao carregar a categoria: {ex.Message}");
+            }
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace api_rest.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> PostAsync([FromBody] SaveCategoryResource resource)
+        public async Task<IActionResult> PostAsync([FromBody] SaveCategoryResource resource)
         {
            if(!ModelState.IsValid)
            {
@@ -51,5 +51,28 @@ namespace api_rest.Controllers
            var categoryResource = _mapper.Map<Category, CategoryResource>(result.Category);
            return Ok(categoryResource);
         }
+    
+        [HttpPut("id")]
+        
+        public async Task<IActionResult> PutAsync(int id, [FromBody] SaveCategoryResource resource)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorMessages());
+            }
+
+            var category = _mapper.Map<SaveCategoryResource, Category>(resource);
+            var result = await _categoryService.UpdateAsync(id, category);
+
+            if(!result.Success)
+            {
+                return BadRequest(result.Massage);
+            }
+
+            var categoryResource = _mapper.Map<Category, CategoryResource>(result.Category);
+            return Ok(categoryResource);
+        }
+    
+    
     }
 }

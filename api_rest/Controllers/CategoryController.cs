@@ -52,7 +52,7 @@ namespace api_rest.Controllers
            return Ok(categoryResource);
         }
     
-        [HttpPut("id")]
+        [HttpPut("{id}]")]
         
         public async Task<IActionResult> PutAsync(int id, [FromBody] SaveCategoryResource resource)
         {
@@ -73,6 +73,19 @@ namespace api_rest.Controllers
             return Ok(categoryResource);
         }
     
-    
+        [HttpDelete("{id}")]
+
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            var result = await _categoryService.DeleteAsync(id);
+
+            if(!result.Success)
+            {
+                return BadRequest(result.Massage);
+            }
+
+            var categoryResource = _mapper.Map<Category, CategoryResource>(result.Category);
+            return Ok(categoryResource);
+        }
     }
 }

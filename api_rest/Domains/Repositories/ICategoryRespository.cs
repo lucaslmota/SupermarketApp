@@ -13,5 +13,7 @@ namespace api_rest.Domains.Repositories
         Task<Category> FindByIdAsync(int id);
 
         void Update(Category category);
+
+        void Remove(Category category);
     }
 }

@@ -23,29 +23,29 @@ namespace api_rest.Services
             return await _categoryRepository.ListAsync();
         }  
 
-        public async Task<SaveCategoryResponse> SaveAsync(Category category)
+        public async Task<CategoryResponse> SaveAsync(Category category)
         {
             try
             {
                 await _categoryRepository.AddAsync(category);
                 await _unityOfWork.CompleteAsync();
 
-                return new SaveCategoryResponse(category);
+                return new CategoryResponse(category);
             }
 
             catch(Exception ex)
             {
-                return new SaveCategoryResponse($"Um erro ocorreu quando salvado a categoria: {ex.Message}");
+                return new CategoryResponse($"Um erro ocorreu quando salvado a categoria: {ex.Message}");
             }
         }
     
-        public async Task<SaveCategoryResponse> UpdateAsync(int id, Category category)
+        public async Task<CategoryResponse> UpdateAsync(int id, Category category)
         {
             var existingCategory = await _categoryRepository.FindByIdAsync(id);
 
             if(existingCategory == null)
             {
-                return new SaveCategoryResponse("Categoria não encontrada");
+                return new CategoryResponse("Categoria não encontrada");
             }
 
             existingCategory.Name = category.Name;
@@ -55,13 +55,36 @@ namespace api_rest.Services
                 _categoryRepository.Update(existingCategory);
                 await _unityOfWork.CompleteAsync();
 
-                return new SaveCategoryResponse(existingCategory);
+                return new CategoryResponse(existingCategory);
             }
 
             catch (Exception ex)
             {
-                return new SaveCategoryResponse($"Um erro aconteceu ao carregar a categoria: {ex.Message}");
+                return new CategoryResponse($"Um erro aconteceu ao carregar a categoria: {ex.Message}");
             }
         }
+    
+        public async Task<CategoryResponse> DeleteAsync(int id)
+        {
+            var existingCategory = await _categoryRepository.FindByIdAsync(id);
+
+            if(existingCategory == null)
+            {
+                return new CategoryResponse("Categoria não encontrada");
+            }
+
+            try
+            {
+                _categoryRepository.Remove(existingCategory);
+                await _unityOfWork.CompleteAsync();
+
+                return new CategoryResponse(existingCategory);
+            }
+            catch (Exception ex)
+            {
+                return new CategoryResponse($"Um erro ocorreu quando a categoria foi apagada: {ex.Message}");
+            }
+        }
+    
     }
 }

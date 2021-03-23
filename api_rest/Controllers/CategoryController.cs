@@ -52,7 +52,7 @@ namespace api_rest.Controllers
            return Ok(categoryResource);
         }
     
-        [HttpPut("{id}]")]
+        [HttpPut("{id}")]
         
         public async Task<IActionResult> PutAsync(int id, [FromBody] SaveCategoryResource resource)
         {
